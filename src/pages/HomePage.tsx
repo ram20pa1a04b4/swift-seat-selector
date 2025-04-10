@@ -9,7 +9,7 @@ import BookingForm from '@/components/BookingForm';
 import UserBookings from '@/components/UserBookings';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Booking, Seat, User } from '@/types';
+import { Booking, Seat, User, SeatStatus } from '@/types';
 import { generateSeatMap, updateSeatStatus } from '@/utils/seatUtils';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,7 +34,7 @@ const HomePage = () => {
       const updatedSeats = updateSeatStatus(
         initialSeats,
         randomSeatIds,
-        'booked',
+        'booked' as SeatStatus,
         'demo-user',
         'demo-booking'
       );
@@ -57,18 +57,18 @@ const HomePage = () => {
 
   const handleSeatSelect = (seat: Seat) => {
     // Update the selected seat status
-    const updatedSeats = updateSeatStatus([seat], [seat.id], 'selected');
+    const updatedSeats = updateSeatStatus([seat], [seat.id], 'selected' as SeatStatus);
     setSeats((prevSeats) =>
       prevSeats.map((prevSeat) =>
         prevSeat.id === seat.id ? updatedSeats[0] : prevSeat
       )
     );
-    setSelectedSeats((prev) => [...prev, { ...seat, status: 'selected' }]);
+    setSelectedSeats((prev) => [...prev, { ...seat, status: 'selected' as SeatStatus }]);
   };
 
   const handleSeatDeselect = (seat: Seat) => {
     // Update the deselected seat status back to available
-    const updatedSeats = updateSeatStatus([seat], [seat.id], 'available');
+    const updatedSeats = updateSeatStatus([seat], [seat.id], 'available' as SeatStatus);
     setSeats((prevSeats) =>
       prevSeats.map((prevSeat) =>
         prevSeat.id === seat.id ? updatedSeats[0] : prevSeat
@@ -81,18 +81,18 @@ const HomePage = () => {
     // Clear any previously selected seats
     const clearedSeats = seats.map((seat) =>
       selectedSeats.some((selected) => selected.id === seat.id)
-        ? { ...seat, status: 'available' }
+        ? { ...seat, status: 'available' as SeatStatus }
         : seat
     );
 
     // Update selected seats
     const seatIds = bestSeats.map((seat) => seat.id);
-    const updatedSeats = updateSeatStatus(clearedSeats, seatIds, 'selected');
+    const updatedSeats = updateSeatStatus(clearedSeats, seatIds, 'selected' as SeatStatus);
     setSeats(updatedSeats);
 
     // Update selected seats state
     setSelectedSeats(
-      bestSeats.map((seat) => ({ ...seat, status: 'selected' }))
+      bestSeats.map((seat) => ({ ...seat, status: 'selected' as SeatStatus }))
     );
 
     // Show toast notification
@@ -135,7 +135,7 @@ const HomePage = () => {
     const updatedSeats = updateSeatStatus(
       seats,
       seatIds,
-      'booked',
+      'booked' as SeatStatus,
       user.id,
       bookingId
     );
@@ -169,7 +169,7 @@ const HomePage = () => {
     const seatIds = booking.seats.map((seat) => seat.id);
 
     // Update seats status to available
-    const updatedSeats = updateSeatStatus(seats, seatIds, 'available');
+    const updatedSeats = updateSeatStatus(seats, seatIds, 'available' as SeatStatus);
     setSeats(updatedSeats);
 
     // Remove the booking
